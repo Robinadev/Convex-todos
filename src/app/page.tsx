@@ -1,5 +1,5 @@
 "use client";
-import { title } from "process";
+
 import { NewToDoForm } from "./_components/new-todo-form";
 
 import { useState } from "react";
@@ -10,7 +10,7 @@ type ToDoItem = {
   completed: boolean;
 };
 
-function Home() {
+ export default function Home() {
   const [todos, setTodos] = useState<ToDoItem[]>([
     { title: "Example", description: "This is an example", completed: false }
   ]);
@@ -89,4 +89,4 @@ function ToDoItem({ title, description, completed, onCompleteChanged,onRemove }:
 }
 
 
-export default Home;
+
