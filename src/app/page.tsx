@@ -1,7 +1,6 @@
 "use client";
 
 import { NewToDoForm } from "./_components/new-todo-form";
-
 import { useState } from "react";
 
 type ToDoItem = {
@@ -10,60 +9,60 @@ type ToDoItem = {
   completed: boolean;
 };
 
- export default function Home() {
+export default function Home() {
   const [todos, setTodos] = useState<ToDoItem[]>([
-    { title: "Example", description: "This is an example", completed: false }
+    { title: "Example", description: "This is an example", completed: false },
   ]);
-  
- ;
-  
-  
+
   return (
-    <div className="max-w-screen-md mx-auto p-4 space-y-4">
-    <h1 className="text-xl font-bold">To-Do List</h1>
-    <ul className="space-y-2">
-      {todos.map(({ title, description, completed }, index) => (
-        <ToDoItem
-          key={index}
-          title={title}
-          description={description}
-          completed={completed}
-          onCompleteChanged={(newValue) => {
+    <div className="max-w-screen-md mx-auto p-4 space-y-6 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold text-center text-gray-800">To-Do List</h1>
+      <div className="grid gap-4">
+        {todos.map(({ title, description, completed }, index) => (
+          <ToDoItem
+            key={index}
+            title={title}
+            description={description}
+            completed={completed}
+            onCompleteChanged={(newValue) => {
+              setTodos((prev) => {
+                const newTodos = [...prev];
+                newTodos[index].completed = newValue;
+                return newTodos;
+              });
+            }}
+            onRemove={() => {
+              setTodos((prev) => {
+                const newTodos = [...prev].filter((_, i) => i !== index);
+                return newTodos;
+              });
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="p-4 bg-white rounded-lg shadow-md">
+        <NewToDoForm
+          onCreate={(title, description) => {
             setTodos((prev) => {
               const newTodos = [...prev];
-              newTodos[index].completed = newValue;
+              newTodos.push({ title, description, completed: false });
               return newTodos;
             });
           }}
-          onRemove={() => { 
-            setTodos(prev =>{
-              const newTodos=[...prev].filter((_,i) => i !== index);
-              return newTodos;
-            } )
-          }}
         />
-      ))}
-    </ul>
-  
-  
-
-  <NewToDoForm
-  onCreate={(title, description) => {
-    setTodos((prev) => {
-      const newTodos = [...prev];
-      newTodos.push({ title, description, completed: false });
-      return newTodos;
-    });
-  }}
-/>
-
-
-
-
+      </div>
     </div>
   );
 }
-function ToDoItem({ title, description, completed, onCompleteChanged,onRemove }: {
+
+function ToDoItem({
+  title,
+  description,
+  completed,
+  onCompleteChanged,
+  onRemove,
+}: {
   title: string;
   description: string;
   completed: boolean;
@@ -71,22 +70,24 @@ function ToDoItem({ title, description, completed, onCompleteChanged,onRemove }:
   onRemove: () => void;
 }) {
   return (
-    <li className="w-full items-center flex gap-2 border rounded p-2">
+    <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <input
         type="checkbox"
         checked={completed}
         onChange={(e) => onCompleteChanged(e.target.checked)}
+        className="w-5 h-5 text-blue-500 rounded focus:ring-blue-400"
       />
-      <div>
-        <p className="font-semibold">{title}</p>
+      <div className="flex-1">
+        <p className={`font-semibold ${completed ? 'line-through text-gray-500' : 'text-gray-800'}`}>{title}</p>
         <p className="text-sm text-gray-600">{description}</p>
       </div>
-      <div className="ml-auto">
-        <button type="button" className="text-red-500" onClick={() => onRemove() }>Remove</button>
-      </div>
-    </li>
+      <button
+        type="button"
+        className="text-red-500 hover:text-red-700"
+        onClick={() => onRemove()}
+      >
+        Remove
+      </button>
+    </div>
   );
 }
-
-
-
